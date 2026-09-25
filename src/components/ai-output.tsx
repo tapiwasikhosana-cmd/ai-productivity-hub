@@ -36,7 +36,7 @@ export function MarkdownView({ content }: { content: string }) {
       list = [];
     }
     if (table.length) {
-      const [head, ...rows] = table;
+      const [head = [], ...rows] = table;
       blocks.push(
         <div key={`tb-${key}`} className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full text-left text-sm">

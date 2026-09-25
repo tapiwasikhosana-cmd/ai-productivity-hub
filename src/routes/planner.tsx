@@ -124,7 +124,7 @@ function TaskPlanner() {
               max={12}
               step={1}
               value={[draft.hoursPerDay]}
-              onValueChange={([value]) => setDraft((p) => ({ ...p, hoursPerDay: value }))}
+              onValueChange={([value]) => setDraft((p) => ({ ...p, hoursPerDay: value ?? p.hoursPerDay }))}
               aria-label="Available working hours per day"
             />
           </div>
