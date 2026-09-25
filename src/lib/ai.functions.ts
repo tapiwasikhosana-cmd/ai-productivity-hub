@@ -159,4 +159,28 @@ const plannerInput = z.object({
 });
 
 export const buildPlan = createServerFn({ method: "POST" })
-<<<PLACEHOLDER>>>
+  .inputValidator((data: unknown) => plannerInput.parse(data))
+  .handler(async ({ data }) => {
+    const system = [
+      "You are a pragmatic productivity planner.",
+      `Build a realistic ${data.horizon} schedule from the user's task list.`,
+      "Respect the stated available working hours per day; never schedule more than that.",
+      "Respond in markdown with these sections:",
+      "## Priority Order",
+      "(ranked list with a one-line reason each, referencing deadlines and priorities given)",
+      data.horizon === "daily" ? "## Today's Schedule" : "## Weekly Schedule",
+      "(time-blocked plan using a table with columns Time | Task | Focus)",
+      "## Risks & Adjustments",
+      "Be concrete: use the user's exact task names and deadlines. No generic advice.",
+    ].join("\n");
+
+    const user = [
+      `Planning horizon: ${data.horizon}`,
+      `Available working hours per day: ${data.hoursPerDay}`,
+      `Tasks, deadlines and priorities:\n${data.tasks}`,
+      data.notes.trim() ? `Constraints / preferences:\n${data.notes}` : "No extra constraints.",
+    ].join("\n\n");
+
+    return { text: await runAi(system, user) };
+  });
+
